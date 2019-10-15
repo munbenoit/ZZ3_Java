@@ -1,3 +1,4 @@
+import java.util.Comparator;
 
 public class MetroStop {
 	private int id;
@@ -6,6 +7,12 @@ public class MetroStop {
 	private String name;
 	private String ville;
 	private String typeStop;
+	
+	private static Comparator<MetroStop> idComparator = new Comparator<MetroStop>() {
+		public int compare(MetroStop ms1, MetroStop ms2) {
+			return ms1.id - ms2.id;
+		}
+	};
 	
 	public MetroStop(int id, double lat, double longi, String n, String v, String t) {
 		this.id = id;
@@ -43,6 +50,10 @@ public class MetroStop {
 
 	public String getTypeStop() {
 		return typeStop;
+	}
+	
+	public Comparator<MetroStop> getIdComparator(){
+		return idComparator;
 	}
 
 	

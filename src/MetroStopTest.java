@@ -11,8 +11,10 @@ public class MetroStopTest extends TestCase{
 		ms = null;
 	}
 	
-	public void testMetroStop() {
+	public void testPrintMetroStop() {
 		assertEquals(ms.toString(),ms.getId() + " " + ms.getLatitude() + " " + ms.getLongitude() + " " + ms.getName() + " " + ms.getVille() + " " + ms.getTypeStop());
 	}
+	
+	
 	
 }
