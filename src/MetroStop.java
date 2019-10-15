@@ -14,6 +14,12 @@ public class MetroStop {
 		}
 	};
 	
+	private static Comparator<MetroStop> nameComparator = new Comparator<MetroStop>() {
+		public int compare(MetroStop ms1, MetroStop ms2) {
+			return ms1.getName().compareTo(ms2.getName());
+		}
+	};
+	
 	public MetroStop(int id, double lat, double longi, String n, String v, String t) {
 		this.id = id;
 		latitude = lat;
@@ -52,8 +58,12 @@ public class MetroStop {
 		return typeStop;
 	}
 	
-	public Comparator<MetroStop> getIdComparator(){
+	public static Comparator<MetroStop> getIdComparator(){
 		return idComparator;
+	}
+	
+	public static Comparator<MetroStop> getNameComparator(){
+		return nameComparator;
 	}
 
 	
