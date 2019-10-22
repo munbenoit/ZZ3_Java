@@ -6,7 +6,14 @@ public class Meteo {
 	
 	private class Statistics{
 		private double temp;
+		
+		public void afficher() {
+			System.out.println(temp);
+		}
 	}
 
+	public void afficher() {
+		main.afficher();
+	}
 	
 }

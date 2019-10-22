@@ -19,8 +19,8 @@ public class Main {
 			InputStream  in = new  BufferedInputStream(connectioUrl.getInputStream ());
 			BufferedReader test = new BufferedReader(new InputStreamReader(in));
 			Gson gson = new Gson();
-			gson.fromJson(test, Meteo.class);
-			
+			Meteo m = gson.fromJson(test, Meteo.class);
+			m.afficher();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {
