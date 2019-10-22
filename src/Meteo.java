@@ -6,9 +6,12 @@ public class Meteo {
 	
 	private class Statistics{
 		private double temp;
+		private double temp_min;
+		private double temp_max;
+		private int humidity;
 		
 		public void afficher() {
-			System.out.println(temp);
+			System.out.println("Température : " + temp + " Température min : " + temp_min + " Température max : " + temp_max + " Humidity : " + humidity);;
 		}
 	}
 
