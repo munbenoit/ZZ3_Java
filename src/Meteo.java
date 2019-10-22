@@ -1,8 +1,9 @@
 import java.util.Date;
 
 public class Meteo {
-	private Date date;
+	private Date date = new Date();
 	private Statistics main;
+	private String name;
 	
 	private class Statistics{
 		private double temp;
@@ -11,11 +12,12 @@ public class Meteo {
 		private int humidity;
 		
 		public void afficher() {
-			System.out.println("Température : " + temp + " Température min : " + temp_min + " Température max : " + temp_max + " Humidity : " + humidity);;
+			System.out.print("Température : " + temp + " Température min : " + temp_min + " Température max : " + temp_max + " Humidity : " + humidity);;
 		}
 	}
 
 	public void afficher() {
+		System.out.print(name + " " + date.toString()+" ");
 		main.afficher();
 	}
 	
