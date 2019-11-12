@@ -4,7 +4,7 @@ public class Meteo {
 	private Date date = new Date();
 	private Statistics main;
 	private String name;
-	
+
 	private class Statistics{
 		private double temp;
 		private double temp_min;
@@ -16,6 +16,18 @@ public class Meteo {
 		}
 	}
 
+	public String getName() {
+		return name;
+	}
+	
+	public double getTemp() {
+		return main.temp;
+	}
+
+	public int getHumidity() {
+		return main.humidity;
+	}
+	
 	public void afficher() {
 		System.out.print(name + " " + date.toString()+" ");
 		main.afficher();

@@ -10,6 +10,7 @@ import java.sql.*;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
@@ -28,34 +29,38 @@ public class Main {
 		try {
 			Connection connect = DriverManager.getConnection("jdbc:sqlite:baduk.db");
 			Statement stmt = connect.createStatement();
+			//stmt.executeUpdate("DROP TABLE IF EXISTS weather");
 			DatabaseMetaData meta = connect.getMetaData();
 			res = meta.getTables(null, null, "weather", null);
+			
 			if(res.next()) {
 				System.out.println("La table existe");
 			}else {
 				System.out.println("Création de la table");
-				stmt.executeUpdate("CREATE TABLE weather (city STRING PRIMARY KEY, temp DOUBLE)");
-				stmt.executeUpdate("INSERT INTO weather values(' "+"clermont"+"',"+getMeteo("clermont")+", "+  +")");
-				stmt.executeUpdate("INSERT INTO weather values(' "+"londres"+"',"+getMeteo("londres")+")");
-				stmt.executeUpdate("INSERT INTO weather values(' "+"paris"+"',"+getMeteo("paris")+")");
-				stmt.executeUpdate("INSERT INTO weather values(' "+"lyon"+"',"+getMeteo("lyon")+")");
-				stmt.executeUpdate("INSERT INTO weather values(' "+"tokyo"+"',"+getMeteo("tokyo")+")");
-				stmt.executeUpdate("INSERT INTO weather values(' "+"pekin"+"',"+getMeteo("pekin")+")");
+				stmt.executeUpdate("CREATE TABLE weather (city STRING, temp DOUBLE)");
+				addEntry(connect,"clermont");
+				addEntry(connect,"paris");
+				addEntry(connect,"londres");
+				addEntry(connect,"tokyo");
+				
 				
 			}
 			
+			res = stmt.executeQuery(request);
+			while(res.next()){
+				System.out.println("city = " + res.getString("city") + " température = " + res.getDouble("temp"));
+	        }
 			
+			addEntry(connect);
 			
 			res = stmt.executeQuery(request);
-			while(res.next())
-	           {
-	              System.out.println("city = " + res.getString("city"));
-	           }
+			while(res.next()){
+				System.out.println("city = " + res.getString("city") + " température = " + res.getDouble("temp"));
+	        }
 			
 			connect.close();
 			
 		} catch (SQLException e) {
-			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
 	}
@@ -73,7 +78,7 @@ public class Main {
 				BufferedReader test = new BufferedReader(new InputStreamReader(in));
 				Gson gson = new Gson();
 				Meteo m = gson.fromJson(test, Meteo.class);
-				m.afficher();
+				//m.afficher();
 				return m;
 			}
 		} catch (IOException e) {
@@ -91,5 +96,42 @@ public class Main {
 		String normalized = Normalizer.normalize(nowhitespace, Form.NFD);
 	    String slug = NONLATIN.matcher(normalized).replaceAll("");
 		return slug.toLowerCase(Locale.FRENCH);
+	}
+	
+	public static void addEntry(Connection connect) throws SQLException {
+		System.out.println("Veuillez entrer le nom d'une ville");
+		
+		Scanner sc = new Scanner(System.in);
+		String city = sc.nextLine();
+		
+		
+		Meteo m = getMeteo(city);
+		String request = "Select count(*) from weather where city = '" + m.getName()+"'";
+		Statement s = connect.createStatement();
+		ResultSet res = s.executeQuery(request);
+		if(res.next() && res.getInt(1)>0) {
+			PreparedStatement ps = connect.prepareStatement("UPDATE weather SET city = ?, temp = ? where city = ?");
+			ps.setString(1,m.getName());
+			ps.setDouble(2, m.getTemp());
+			ps.setString(3,m.getName());
+			ps.execute();
+		}else {
+			PreparedStatement ps = connect.prepareStatement("INSERT INTO weather values(? ,?)");
+			ps.setString(1,m.getName());
+			ps.setDouble(2, m.getTemp());
+			ps.execute();
+		}
+		
+		
+		
+	}
+	
+	public static void addEntry(Connection connect, String city) throws SQLException {
+		Meteo m = getMeteo(city);
+		Statement s = connect.createStatement();
+		PreparedStatement ps = connect.prepareStatement("INSERT INTO weather values(? ,?)");
+		ps.setString(1,m.getName());
+		ps.setDouble(2, m.getTemp());
+		ps.execute();
 	}
 }
