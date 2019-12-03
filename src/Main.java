@@ -1,4 +1,8 @@
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,17 +21,18 @@ public class Main {
 
 	public static void main(String[] args) throws TwitterException, IOException {
 		System.out.println("ok");
-		/*JFrame  frame = new  JFrame("exemple");
-		JButton  button = new  JButton("clic␣clic");
-		JLabel  label = new  JLabel("un␣petit␣texte");
-		JPanel  pane = new  JPanel ();
-		pane.add(button );
-		pane.add(label);
-		frame.getContentPane().add(pane ,BorderLayout.CENTER );
-		frame.setVisible(true);
-		*/
+		
+	    Twitter twitter = getTwitterInstance();
+
 	    
-	    ConfigurationBuilder b = new ConfigurationBuilder();
+	    new TwitterUI(twitter);
+		
+	    
+	    
+	}
+	
+	public static Twitter getTwitterInstance() throws TwitterException {
+		ConfigurationBuilder b = new ConfigurationBuilder();
 	    b.setApplicationOnlyAuthEnabled(true);
 	    b.setOAuthConsumerKey(API_KEY);
 	    b.setOAuthConsumerSecret(API_SECRET);
@@ -40,23 +45,13 @@ public class Main {
 	    b.setOAuth2TokenType(token.getTokenType());
 	    b.setOAuth2AccessToken(token.getAccessToken());
 	    
-	    Twitter twitter = new TwitterFactory(b.build()).getInstance();
-	    
-
-    	Query query = new Query("#breizh");
-    	QueryResult result = twitter.search(query);
-    
-	    List<Status> tweets = result.getTweets();
-	    for(Status s : tweets) {
-	    	System.out.print(s.getText());
-	    }
-	    
-	    
+	    return new TwitterFactory(b.build()).getInstance();
 	}
 	
-	private static void storeAccessToken(int useId, AccessToken accessToken){
-	    //store accessToken.getToken()
-	    //store accessToken.getTokenSecret()
-	  }
+	public static List<Status> getTweetsbyHashtag(Twitter twitterInstance, String hashtag) throws TwitterException {
+		Query query = new Query(hashtag);
+    	return twitterInstance.search(query).getTweets();
+	}
+	
 
 }
