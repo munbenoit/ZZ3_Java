@@ -4,15 +4,13 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import twitter4j.Status;
@@ -103,12 +101,24 @@ public class TwitterUI {
 	
 	public void displayTweets(List<Status> tweets) {
 		JFrame  frame = new  JFrame("Tweets");
-		
+		i=0;
 		JPanel resultPanel = new JPanel();
+		JPanel actionPanel = new JPanel();
 		JLabel label = new JLabel();
-		
+		JLabel username = new JLabel();
+		if(tweets.size()>0) {
+			label.setText("<html>"+tweets.get(i%tweets.size()).getText()+"</html>");
+			username.setText("<html>"+tweets.get(i%tweets.size()).getUser().getName()+"</html>");
+			username.setIcon(new ImageIcon(tweets.get(i%tweets.size()).getUser().get400x400ProfileImageURLHttps()));
+		}else {
+			label.setText("<html>Pas de tweets trouvés pour ce #, veuillez essayer avec un autre.</html>");
+		}
 		JButton next = new JButton();
+		JButton prev = new JButton();
 		next.setText("Next");
+		prev.setText("Prev");
+		next.setPreferredSize(new Dimension(100, 40));
+		prev.setPreferredSize(new Dimension(100, 40));
 		
 		next.addMouseListener(new MouseListener() {
 			
@@ -139,20 +149,68 @@ public class TwitterUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				i++;
+				if(i>=tweets.size()) {
+					i=0;
+				}
+				if(tweets.size()>0) {
+					label.setText("<html>"+tweets.get(i).getText()+"</html>");
+					username.setText("<html>"+tweets.get(i).getUser().getName()+"</html>");
+					username.setIcon(new ImageIcon(tweets.get(i).getUser().get400x400ProfileImageURLHttps()));
+				}
+				
+				
+			}
+		});
+		prev.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Stub de la méthode généré automatiquement
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Stub de la méthode généré automatiquement
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Stub de la méthode généré automatiquement
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Stub de la méthode généré automatiquement
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				i--;
+				if(i<0) {
+					i=tweets.size()-1;
+				}
+				if(tweets.size()>0) {
+					label.setText("<html>"+tweets.get(i).getText()+"</html>");
+					username.setText("<html>"+tweets.get(i).getUser().getName()+"</html>");
+					username.setIcon(new ImageIcon(tweets.get(i).getUser().get400x400ProfileImageURLHttps()));
+				}
 				
 			}
 		});
 		
-		
+		actionPanel.setLayout(new FlowLayout());
+		actionPanel.add(prev);
+		actionPanel.add(next);
 	    resultPanel.setLayout(new GridLayout(0,1));
-	    while(i<tweets.size()) {
-	    	label.setText("<html>"+tweets.get(i).getText()+"</html>");
-	    	
-	    }
+	    resultPanel.add(username);
 	    resultPanel.add(label);
-	    resultPanel.add(next);
+	    resultPanel.add(actionPanel);
 	    frame.getContentPane().add(resultPanel);
-	    frame.setSize(800, 200);
+	    frame.setSize(500, 400);
 	    frame.setVisible(true);
 	}
 }

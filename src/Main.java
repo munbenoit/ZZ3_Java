@@ -1,14 +1,8 @@
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.util.List;
 
-import javax.swing.*;
 
 import twitter4j.*;
 import twitter4j.auth.*;
